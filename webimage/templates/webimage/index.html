@@ -1,9 +1,4 @@
 {% extends "webimage/main.html" %}
 {% block content %}
-    <p class="">Welcome to DeepImage!</p>
-    <form action="/" method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit">
-    </form>
+<p>Hello, welcome to DeepImage!</p>
 {% endblock %}

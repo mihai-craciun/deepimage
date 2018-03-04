@@ -1,3 +1,15 @@
-.bg-primary {
-    background: #359e43 !important;
+.bg-deepimage {
+    background: #1a657b !important;
+}
+
+.logo {
+    image-rendering: pixelated;
+}
+
+html, body {
+    background-color: #d9edf3 !important;
+}
+
+.navbar {
+    height: 50px;
 }
