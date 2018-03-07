@@ -2,6 +2,10 @@
     background: #1a657b !important;
 }
 
+.bg-di-lighter {
+    background: #538998 !important;
+}
+
 .logo {
     image-rendering: pixelated;
 }

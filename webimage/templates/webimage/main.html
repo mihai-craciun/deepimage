@@ -37,19 +37,42 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'webimage:gallery' %}">Gallery</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin">Admin</a>
+        </li>
       </ul>
       <ul class="navbar-nav ml-auto">
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a style="margin-top: 1px" class="nav-link" href="{% url 'webimage:index' %}">
+            {% if user.first_name %}
+            {{ user.first_name }}
+            {% else %}
+            {{ user.username }}
+            {% endif %}
+          </a>
+        </li>
+        <li class="nav-item">
+          <form action="{% url 'webimage:logout' %}" method="post">
+            {% csrf_token %}
+            <button class="nav-link btn btn-link" type="submit">Logout</button>
+          </form>
+        </li>
+        {% else %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'webimage:login' %}">Login</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'webimage:register' %}">Register</a>
         </li>
+        {% endif %}
       </ul>
     </div>
   </nav>
   <!-- Content -->
+  <div id="content" class="content">
   {% block content %}{% endblock %}
+  </div>
 </body>
 
 </html>
