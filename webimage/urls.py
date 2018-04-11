@@ -9,5 +9,4 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='register'),
     path('logout/', views.LogoutView.as_view(), name='logout'),
     path('gallery/', login_required(views.GalleryView.as_view(),login_url='/login/'), name='gallery'),
-    # path('gallery/<user>/', login_required(views.G))
 ]

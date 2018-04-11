@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View
 from django.contrib.auth import authenticate, logout, login
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import *
 # Create your views here.
@@ -9,7 +8,6 @@ from .forms import *
 
 class IndexView(View):
     def get(self, request):
-        print(request.user.is_authenticated)
         return render(request, 'webimage/index.html', {
             'title': 'Home',
         })
