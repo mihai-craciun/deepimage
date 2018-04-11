@@ -1,11 +1,13 @@
 from django.urls import path
+from django.contrib.auth.decorators import login_required
 from . import views
 
 app_name = 'webimage'
 urlpatterns = [
-    path('', views.IndexView.as_view(), name='index'),
-    path('gallery/', views.GalleryView.as_view(), name='gallery'),
+    path('', login_required(views.IndexView.as_view(),login_url='/login/'), name='index'),
     path('login/', views.LoginView.as_view(), name='login'),
     path('register/', views.RegisterView.as_view(), name='register'),
     path('logout/', views.LogoutView.as_view(), name='logout'),
+    path('gallery/', login_required(views.GalleryView.as_view(),login_url='/login/'), name='gallery'),
+    # path('gallery/<user>/', login_required(views.G))
 ]

@@ -1,19 +1,35 @@
 .bg-deepimage {
-    background: #1a657b !important;
+    background: #0c3d4d !important;
 }
 
 .bg-di-lighter {
-    background: #538998 !important;
+    background: #3f6f7c !important;
 }
 
 .logo {
-    image-rendering: pixelated;
+    image-rendering: auto;
 }
 
-html, body {
-    background-color: #d9edf3 !important;
+body {
+    /* background-color: #d9edf3 !important; */
+    background-image: url('../img/wallpaper.jpg');
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
-.navbar {
-    height: 50px;
+.main-navbar {
+    height: 40px;
+    position: fixed !important;
+    z-index: 1;
+    width: 100%;
+    top: 0px;
+}
+
+.content {
+    margin-top: 80px;
+}
+
+.card {
+    border: 0px !important;
 }
