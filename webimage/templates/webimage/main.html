@@ -3,76 +3,78 @@
 <html>
 
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>{% if title %}{{ title }}{% endif %}</title>
-  <!-- Main javascript and css -->
-  <link rel="stylesheet" type="text/css" href="{% static 'webimage/css/main.css' %}" />
-  <script src="{% static 'webimage/js/main.js' %}"></script>
-  <link rel="icon" href="{% static 'webimage/img/deepimage.png' %}" type="image/x-icon" />
-  <!-- Bootstrap local -->
-  <link rel="stylesheet" type="text/css" href="{% static 'webimage/bootstrap/css/bootstrap.css' %}" />
-  <script src="{% static 'webimage/js/jquery-3.3.1.min.js' %}"></script>
-  <script src="{% static 'webimage/bootstrap/js/bootstrap.js' %}"></script>
-  <!-- Others -->
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{% if title %}{{ title }}{% endif %}</title>
+    <!-- Main javascript and css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'webimage/css/main.css' %}"/>
+    <script src="{% static 'webimage/js/main.js' %}"></script>
+    <link rel="icon" href="{% static 'webimage/img/deepimage.png' %}" type="image/x-icon"/>
+    <!-- Bootstrap local -->
+    <link rel="stylesheet" type="text/css" href="{% static 'webimage/bootstrap/css/bootstrap.css' %}"/>
+    <script src="{% static 'webimage/js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'webimage/bootstrap/js/bootstrap.js' %}"></script>
+    <!-- Others -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
-  <!-- Navigation bar -->
-  <nav class="main-navbar navbar navbar-expand-lg navbar-dark bg-deepimage">
+<!-- Navigation bar -->
+<nav class="main-navbar navbar navbar-expand-lg navbar-dark bg-deepimage">
     <a class="navbar-brand" href="{% url 'webimage:index' %}">
-      <img src="{% static 'webimage/img/deepimage.png' %}" width="30" height="30" class="d-inline-block align-top logo" alt="">
-      <span>Deepimage</span>
+        <img src="{% static 'webimage/img/deepimage.png' %}" width="30" height="30"
+             class="d-inline-block align-top logo" alt="">
+        <span>Deepimage</span>
     </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-      aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'webimage:index' %}">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'webimage:gallery' %}">Gallery</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/admin">Admin</a>
-        </li>
-      </ul>
-      <ul class="navbar-nav ml-auto">
-        {% if user.is_authenticated %}
-        <li class="nav-item">
-          <a style="margin-top: 1px" class="nav-link" href="{% url 'webimage:index' %}">
-            {% if user.first_name %}
-            {{ user.first_name }}
-            {% else %}
-            {{ user.username }}
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'webimage:gallery' %}">Gallery</a>
+            </li>
+            {% if user.is_staff %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin">Admin</a>
+                </li>
             {% endif %}
-          </a>
-        </li>
-        <li class="nav-item">
-          <form action="{% url 'webimage:logout' %}" method="post">
-            {% csrf_token %}
-            <button class="nav-link btn btn-link" type="submit">Logout</button>
-          </form>
-        </li>
-        {% else %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'webimage:login' %}">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'webimage:register' %}">Register</a>
-        </li>
-        {% endif %}
-      </ul>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a style="margin-top: 1px" class="nav-link" href="{% url 'webimage:index' %}">
+                        {% if user.first_name %}
+                            {{ user.first_name }}
+                        {% else %}
+                            {{ user.username }}
+                        {% endif %}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <form action="{% url 'webimage:logout' %}" method="post">
+                        {% csrf_token %}
+                        <button class="nav-link btn btn-link" type="submit">Logout</button>
+                    </form>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'webimage:login' %}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'webimage:register' %}">Register</a>
+                </li>
+            {% endif %}
+        </ul>
     </div>
-  </nav>
-  <!-- Content -->
-  <div id="content" class="content">
-  {% block content %}{% endblock %}
-  </div>
+</nav>
+<!-- Content -->
+<div id="content" class="content">
+    {% block content %}{% endblock %}
+</div>
 </body>
 
 </html>

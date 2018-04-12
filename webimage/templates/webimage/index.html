@@ -1,4 +1,71 @@
 {% extends "webimage/main.html" %}
 {% block content %}
-<!-- <p>Hello, welcome to DeepImage!</p> -->
+    <div class="col-8 offset-2">
+        <div class="card">
+            <div class="card-header bg-di-lighter text-center text-white">
+                Dashboard
+            </div>
+            <div class="card-body">
+                <h5 class="text-center mt-2 mb-4">
+                    <span class="text">
+                        {{ user.first_name }} {{ user.last_name }}
+                    </span>
+                    <span> - </span>
+                    <span class="text-primary">@</span><span class="text-secondary">{{ user.username }}</span>
+                    <a class="card-link ml-2" href="{% url 'webimage:index' %}">
+                        <i class="fa fa-edit text-dark"></i>
+                    </a>
+                </h5>
+                <p class="text-secondary">
+                    Hello, {{ user.first_name }}.
+                    <br>
+                    Thank you for using DeepImage as your album browser.
+                    Here is a short statistical resume of your activity on our platform,
+                    feel free to add new memories anytime you want.
+                </p>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <div class="float-left">
+                            <span class="fa fa-folder-open"></span>
+                            <span>Albums</span>
+                        </div>
+                        <div class="float-right">
+                            <span class="badge badge-pill badge-primary">12123</span>
+                            <span class="badge badge-pill badge-warning">#12</span>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="float-left">
+                            <span class="fa fa-photo"></span>
+                            <span>Photos</span>
+                        </div>
+                        <div class="float-right">
+                            <span class="badge badge-pill badge-primary">12123123</span>
+                            <span class="badge badge-pill badge-warning">#554</span>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="float-left">
+                            <span class="fa fa-tags"></span>
+                            <span>Tags</span>
+                        </div>
+                        <div class="float-right">
+                            <span class="badge badge-pill badge-primary">12123</span>
+                            <span class="badge badge-pill badge-warning">#12</span>
+                        </div>
+                    </li>
+                </ul>
+                <p class="text-secondary mt-2 mb-2">
+                    Here are some of your favourite tags :
+                </p>
+                <ul class="list-group">
+                    <li class="list-group-item text-center">
+                        <span class="badge badge-secondary">Dog</span>
+                        <span class="badge badge-secondary">Aeroplane</span>
+                        <span class="badge badge-secondary">Fixing a car</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -52,7 +52,7 @@ class LoginView(View):
             if user is not None:
                 login(request, user)
 
-                #I f remember is True then set expiry in a year. else until browser close
+                # If remember is True then set expiry in a year. else until browser close
                 if data['remember']:
                     request.session.set_expiry(365 * 24 * 60 * 60)
                 else:
