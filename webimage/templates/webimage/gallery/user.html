@@ -1,0 +1,12 @@
+{% extends 'webimage/gallery.html' %}
+{% block navigation %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'webimage:gallery' %}">Users</a>
+    </li>
+    <li>
+        <div class="nav-link"> ></div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'webimage:gallery_user' user.username %}">{{ user.username }}</a>
+    </li>
+{% endblock %}

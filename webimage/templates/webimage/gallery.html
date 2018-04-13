@@ -1,3 +1,53 @@
-{% extends 'webimage/main.html' %} 
+{% extends 'webimage/main.html' %}
 {% block content %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-gallery-top ml-5 mr-5">
+        <a class="navbar-brand" href="{% url 'webimage:gallery_user' user.username %}">
+            <span class="text-primary">@</span><span class="text">{{ user.username }}</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link {% if field == 'Users' %} active {% endif %}"
+                       href="{% url 'webimage:gallery' %}">Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if field == 'Tags' %} active {% endif %}"
+                       href="{% url 'webimage:gallery_tags' %}">Tags</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                {% if field == 'Users' %}
+                    <span class="fa fa-users nav-link disabled"></span>
+                {% endif %}
+                {% if field == 'Tags' %}
+                    <span class="fa fa-tags nav-link disabled"></span>
+                {% endif %}
+                <input class="form-control mr-sm-2" type="search" placeholder="Search {{ field.lower }}" aria-label="Search">
+                <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+    <nav class="navbar navbar-expand-lg navbar-light navbar-gallery-bottom ml-5 mr-5">
+        <ul class="navbar-nav mr-auto">
+           {% block navigation %}
+           {% endblock %}
+        </ul>
+    </nav>
+    <div class="mt-4 ml-5 mr-5 mb-5">
+        <div class="card container-fluid">
+            <div class="card-body bg-di-gallery row">
+                {% block mainitem %}
+                {% endblock %}
+                {% for i in items %}
+                    {% block item %}
+                    {% endblock %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

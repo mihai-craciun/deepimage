@@ -6,6 +6,10 @@
     background: #3f6f7c !important;
 }
 
+.bg-di-gallery {
+    background: #9abac3 !important;
+}
+
 .logo {
     image-rendering: auto;
 }
@@ -22,8 +26,17 @@ body {
     top: 0px;
 }
 
+.navbar-gallery-top {
+
+}
+
+.navbar-gallery-bottom {
+    height: 45px;
+    background: #e5eef1 !important;
+}
+
 .content {
-    margin-top: 120px;
+    margin-top: 80px;
 }
 
 .card {

@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.views.generic import View
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.models import User
-from .forms import *
-from .modelviews import userview
+from webimage.forms import *
+from webimage.views.models import userview
 
 
 # Create your views here.
@@ -27,13 +27,6 @@ class IndexView(View):
             'tags': tags.count(),
             'tags_rank': tags_rank,
             'tags_list': tags[:tags_list_limit],
-        })
-
-
-class GalleryView(View):
-    def get(self, request):
-        return render(request, 'webimage/gallery.html', {
-            'title': 'Gallery'
         })
 
 

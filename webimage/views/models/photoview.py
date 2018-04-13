@@ -1,4 +1,4 @@
-from ..models import PhotoTag, Tag
+from webimage.models import PhotoTag, Tag
 
 
 def photo_tags(photo):

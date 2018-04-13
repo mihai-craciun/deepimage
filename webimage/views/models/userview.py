@@ -1,4 +1,4 @@
-from ..models import Album, Photo, Tag, User
+from webimage.models import Album, Photo, Tag, User
 from .albumview import album_photos, album_tags
 
 

@@ -1,4 +1,4 @@
-from ..models import Photo, Tag
+from webimage.models import Photo, Tag
 from .photoview import photo_tags
 
 
