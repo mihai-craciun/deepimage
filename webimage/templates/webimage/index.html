@@ -30,8 +30,8 @@
                             <span>Albums</span>
                         </div>
                         <div class="float-right">
-                            <span class="badge badge-pill badge-primary">12123</span>
-                            <span class="badge badge-pill badge-warning">#12</span>
+                            <span class="badge badge-pill badge-primary">{{ albums }}</span>
+                            <span class="badge badge-pill badge-warning">#{{ albums_rank }}</span>
                         </div>
                     </li>
                     <li class="list-group-item">
@@ -40,8 +40,8 @@
                             <span>Photos</span>
                         </div>
                         <div class="float-right">
-                            <span class="badge badge-pill badge-primary">12123123</span>
-                            <span class="badge badge-pill badge-warning">#554</span>
+                            <span class="badge badge-pill badge-primary">{{ photos }}</span>
+                            <span class="badge badge-pill badge-warning">#{{ photos_rank }}</span>
                         </div>
                     </li>
                     <li class="list-group-item">
@@ -50,8 +50,8 @@
                             <span>Tags</span>
                         </div>
                         <div class="float-right">
-                            <span class="badge badge-pill badge-primary">12123</span>
-                            <span class="badge badge-pill badge-warning">#12</span>
+                            <span class="badge badge-pill badge-primary">{{ tags }}</span>
+                            <span class="badge badge-pill badge-warning">#{{ tags_rank }}</span>
                         </div>
                     </li>
                 </ul>
@@ -60,9 +60,13 @@
                 </p>
                 <ul class="list-group">
                     <li class="list-group-item text-center">
-                        <span class="badge badge-secondary">Dog</span>
-                        <span class="badge badge-secondary">Aeroplane</span>
-                        <span class="badge badge-secondary">Fixing a car</span>
+                        {% if tags != 0 %}
+                            {% for tag in tags_list %}
+                                <span class="badge badge-secondary">{{ tag.tag }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-secondary">You have no tags yet :(</span>
+                        {% endif %}
                     </li>
                 </ul>
             </div>

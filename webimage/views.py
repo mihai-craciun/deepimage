@@ -3,13 +3,30 @@ from django.views.generic import View
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.models import User
 from .forms import *
+from .modelviews import userview
+
+
 # Create your views here.
 
 
 class IndexView(View):
     def get(self, request):
+        albums = userview.user_albums(request.user).count()
+        albums_rank = userview.user_albums_rank(request.user)
+        photos = userview.user_photos(request.user).count()
+        photos_rank = userview.user_photos_rank(request.user)
+        tags = userview.user_tags(request.user)
+        tags_rank = userview.user_tags_rank(request.user)
+        tags_list_limit = 5
         return render(request, 'webimage/index.html', {
             'title': 'Home',
+            'albums': albums,
+            'albums_rank': albums_rank,
+            'photos': photos,
+            'photos_rank': photos_rank,
+            'tags': tags.count(),
+            'tags_rank': tags_rank,
+            'tags_list': tags[:tags_list_limit],
         })
 
 

@@ -32,7 +32,8 @@ class Photo(models.Model):
 class Tag(models.Model):
     tag = models.CharField(max_length=50,
                            validators=[RegexValidator('^\w+$', 'Tag contains invalid characters'),
-                                       MinLengthValidator(1)])
+                                       MinLengthValidator(1)],
+                           unique=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -40,6 +41,9 @@ class Tag(models.Model):
 
 class PhotoTag(models.Model):
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
-    image = models.ForeignKey(Photo, on_delete=models.CASCADE)
+    photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('tag', 'photo')
