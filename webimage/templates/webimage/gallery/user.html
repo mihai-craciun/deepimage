@@ -11,102 +11,103 @@
     </li>
 {% endblock %}
 {% block mainitem %}
-        <div class="card mb-2">
-            <div class="card-body">
-                <h5 class="mt-2 mb-1">
+    <div class="card mb-2">
+        <div class="card-body">
+            <h5 class="mt-2 mb-1">
                     <span class="text">
                         {{ profile.first_name }} {{ profile.last_name }}
                     </span>
-                    <span> - </span>
-                    <span class="text-primary">@</span><span class="text-secondary">{{ profile.username }}</span>
-                </h5>
-                <p class="text-secondary">
-                    {{ profile.username }}'s statistical information:
-                </p>
-                <ul class="list-group">
-                    <li class="list-group-item bg-di-2xlighter">
-                        <div class="float-left">
-                            <span class="fa fa-folder-open"></span>
-                            <span>Albums</span>
-                        </div>
-                        <div class="float-right">
-                            <span class="badge badge-pill badge-primary">{{ albums_count }}</span>
-                            <span class="badge badge-pill badge-warning">#{{ albums_rank }}</span>
-                        </div>
-                    </li>
-                    <li class="list-group-item bg-di-2xlighter">
-                        <div class="float-left">
-                            <span class="fa fa-photo"></span>
-                            <span>Photos</span>
-                        </div>
-                        <div class="float-right">
-                            <span class="badge badge-pill badge-primary">{{ photos_count }}</span>
-                            <span class="badge badge-pill badge-warning">#{{ photos_rank }}</span>
-                        </div>
-                    </li>
-                    <li class="list-group-item bg-di-2xlighter">
-                        <div class="float-left">
-                            <span class="fa fa-tags"></span>
-                            <span>Tags</span>
-                        </div>
-                        <div class="float-right">
-                            <span class="badge badge-pill badge-primary">{{ tags_count }}</span>
-                            <span class="badge badge-pill badge-warning">#{{ tags_rank }}</span>
-                        </div>
-                    </li>
-                </ul>
-                <p class="text-secondary mt-2 mb-2">
-                    Here are some of {{ user.username }}'s tags :
-                </p>
-                <ul class="list-group">
-                    <li class="list-group-item text-center bg-di-2xlighter">
-                        {% if tags != 0 %}
-                            {% for tag in tags_list %}
-                                <span class="badge badge-secondary">{{ tag.tag }}</span>
-                            {% endfor %}
-                        {% else %}
-                            <span class="text-secondary">You have no tags yet :(</span>
-                        {% endif %}
-                    </li>
-                </ul>
-            </div>
+                <span> - </span>
+                <span class="text-primary">@</span><span class="text-secondary">{{ profile.username }}</span>
+            </h5>
+            <p class="text-secondary">
+                {{ profile.username }}'s statistical information:
+            </p>
+            <ul class="list-group">
+                <li class="list-group-item bg-di-2xlighter">
+                    <div class="float-left">
+                        <span class="fa fa-folder-open"></span>
+                        <span>Albums</span>
+                    </div>
+                    <div class="float-right">
+                        <span class="badge badge-pill badge-primary">{{ albums_count }}</span>
+                        <span class="badge badge-pill badge-warning">#{{ albums_rank }}</span>
+                    </div>
+                </li>
+                <li class="list-group-item bg-di-2xlighter">
+                    <div class="float-left">
+                        <span class="fa fa-photo"></span>
+                        <span>Photos</span>
+                    </div>
+                    <div class="float-right">
+                        <span class="badge badge-pill badge-primary">{{ photos_count }}</span>
+                        <span class="badge badge-pill badge-warning">#{{ photos_rank }}</span>
+                    </div>
+                </li>
+                <li class="list-group-item bg-di-2xlighter">
+                    <div class="float-left">
+                        <span class="fa fa-tags"></span>
+                        <span>Tags</span>
+                    </div>
+                    <div class="float-right">
+                        <span class="badge badge-pill badge-primary">{{ tags_count }}</span>
+                        <span class="badge badge-pill badge-warning">#{{ tags_rank }}</span>
+                    </div>
+                </li>
+            </ul>
+            <p class="text-secondary mt-2 mb-2">
+                Here are some of {{ user.username }}'s tags :
+            </p>
+            <ul class="list-group">
+                <li class="list-group-item text-center bg-di-2xlighter">
+                    {% if tags != 0 %}
+                        {% for tag in tags_list %}
+                            <a class="badge badge-secondary"
+                               href="{% url 'webimage:gallery_tags_tag' tag.tag %}">{{ tag.tag }}</a>
+                        {% endfor %}
+                    {% else %}
+                        <span class="text-secondary">You have no tags yet :(</span>
+                    {% endif %}
+                </li>
+            </ul>
         </div>
+    </div>
 
 {% endblock %}
 {% block gallery %}
     {% for album in albums %}
-         <div class="col-sm-6 col-md-4 col-lg-3 mt-2 mb-2">
-                <div class="card">
-                    <div class="card-header text-center">
-                        <i class="fa fa-folder-open"></i>
-                        <a class="card-link" href="{% url 'webimage:gallery_user_album' profile.username album.album.id %}">
-                            <span class="text">{{ album.album.name }}</span>
-                        </a>
-                    </div>
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <span class="float-left">Photos</span>
-                            <span class="float-right">
+        <div class="col-sm-6 col-md-4 col-lg-3 mt-2 mb-2">
+            <div class="card">
+                <div class="card-header text-center">
+                    <i class="fa fa-folder-open"></i>
+                    <a class="card-link" href="{% url 'webimage:gallery_user_album' profile.username album.album.id %}">
+                        <span class="text">{{ album.album.name }}</span>
+                    </a>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <span class="float-left">Photos</span>
+                        <span class="float-right">
                                 <span class="badge badge-pill badge-primary">{{ album.photos }}</span>
                             </span>
-                        </li>
-                        <li class="list-group-item">
-                            <span class="float-left">Tags</span>
-                            <span class="float-right"><span class="float-right">
+                    </li>
+                    <li class="list-group-item">
+                        <span class="float-left">Tags</span>
+                        <span class="float-right"><span class="float-right">
                                 <span class="badge badge-pill badge-primary">{{ album.tags }}</span>
                             </span></span>
-                        </li>
-                    </ul>
-                </div>
-         </div>
-    {%  endfor %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    {% endfor %}
     {% if user == profile %}
         <div class="col-sm-6 col-md-4 col-lg-3 mt-2 mb-2">
-                <div class="card">
-                    <div class="card-header text-center">
-                        <a class="card-link" href="#"><i class="fa fa-plus-circle"></i> New album</a>
-                    </div>
+            <div class="card">
+                <div class="card-header text-center">
+                    <a class="card-link" href="#"><i class="fa fa-plus-circle"></i> New album</a>
                 </div>
-         </div>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}
