@@ -20,34 +20,37 @@
                        href="{% url 'webimage:gallery_tags' %}">Tags</a>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
+            <form class="form-inline my-2 my-lg-0" action="
+                    {% if field == 'Users' %}{% url 'webimage:gallery' %}{% else %}{% url 'webimage:gallery_tags' %}{% endif %}"
+                  method="get">
                 {% if field == 'Users' %}
                     <span class="fa fa-users nav-link disabled"></span>
                 {% endif %}
                 {% if field == 'Tags' %}
                     <span class="fa fa-tags nav-link disabled"></span>
                 {% endif %}
-                <input class="form-control mr-sm-2" type="search" placeholder="Search {{ field.lower }}" aria-label="Search">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search for {{ field.lower }}"
+                       aria-label="Search" name="{{ field.lower|slice:":-1" }}string">
                 <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
             </form>
         </div>
     </nav>
     <nav class="navbar navbar-expand-lg navbar-light navbar-gallery-bottom ml-5 mr-5">
         <ul class="navbar-nav mr-auto">
-           {% block navigation %}
-           {% endblock %}
+            {% block navigation %}
+            {% endblock %}
         </ul>
     </nav>
     <div class="mt-4 ml-5 mr-5 mb-5">
-        <div class="card container-fluid">
-            <div class="card-body bg-di-gallery row">
-                {% block mainitem %}
-                {% endblock %}
-                {% for i in items %}
-                    {% block item %}
+        {% block mainitem %}
+        {% endblock %}
+        {% if gallery_mode %}
+            <div class="card container-fluid">
+                <div class="card-body bg-di-gallery row">
+                    {% block gallery %}
                     {% endblock %}
-                {% endfor %}
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 {% endblock %}

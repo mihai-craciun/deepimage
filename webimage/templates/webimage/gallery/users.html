@@ -3,4 +3,54 @@
     <li class="nav-item">
         <a class="nav-link" href="{% url 'webimage:gallery' %}">Users</a>
     </li>
+    {% if filter %}
+        <li class="nav-item">
+            <a class="nav-link disabled">></a>
+        </li>
+        <li class="nav-item>">
+            <a class="nav-link disabled">Search results for <i>{{ filter }}</i></a>
+        </li>
+    {% endif %}
+{% endblock %}
+{% block gallery %}
+    {% if users|length > 0 %}
+        {% for u in users %}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <a class="card-link" href="{% url 'webimage:gallery_user' u.user.username %}">
+                            <span class="text-primary">@</span><span class="text">{{ u.user.username }}</span>
+                        </a>
+                    </div>
+                    <div class="mt-3 ml-3 mb-2">
+                        <h5 class="text">{{ u.user.first_name }} {{ u.user.last_name }}</h5>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <span class="float-left">Albums</span>
+                            <span class="float-right">
+                                <span class="badge badge-pill badge-warning">#{{ u.albums }}</span>
+                            </span>
+                        </li>
+                        <li class="list-group-item">
+                            <span class="float-left">Photos</span>
+                            <span class="float-right">
+                                <span class="badge badge-pill badge-warning">#{{ u.photos }}</span>
+                            </span>
+                        </li>
+                        <li class="list-group-item">
+                            <span class="float-left">Tags</span>
+                            <span class="float-right"><span class="float-right">
+                                <span class="badge badge-pill badge-warning">#{{ u.tags }}</span>
+                            </span></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="text-center w-100">
+            <span class="text color-di">No results were found :(</span>
+        </div>
+    {% endif %}
 {% endblock %}
