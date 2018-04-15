@@ -18,7 +18,7 @@ urlpatterns = [
         path('tags/', auth_required(gallery.TagsView), name='gallery_tags'),
         path('tags/<str:tag>/', auth_required(gallery.TagView), name='gallery_tags_tag'),
         path('<str:user>/', auth_required(gallery.UserView), name='gallery_user'),
-        path('<str:user>/<int:album>/', auth_required(gallery.AlbumView), name='gallery_user_album'),
-        path('<str:user>/<int:album>/<str:photo>/', auth_required(gallery.PhotoView), name='gallery_user_album_photo')
+        path('<str:user>/<uuid:album>/', auth_required(gallery.AlbumView), name='gallery_user_album'),
+        path('<str:user>/<uuid:album>/<uuid:photo>/', auth_required(gallery.PhotoView), name='gallery_user_album_photo')
     ])),
 ]

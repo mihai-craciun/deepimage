@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import RegexValidator, MinLengthValidator
 from django.contrib.auth.models import User
 from time import strftime
+from uuid import uuid4
 
 
 def get_upload_path(instance, filename):
@@ -11,8 +12,15 @@ def get_upload_path(instance, filename):
 
 
 # Create your models here.
-class Album(models.Model):
-    name = models.CharField(max_length=50, validators=[MinLengthValidator(1)])
+class UUIDModel(models.Model):
+    uuid = models.UUIDField(default=uuid4, editable=False, unique=True)
+
+    class Meta:
+        abstract = True
+
+
+class Album(UUIDModel):
+    name = models.CharField(max_length=50, validators=[MinLengthValidator(1)], unique=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     private = models.BooleanField(default=False)
 
@@ -20,7 +28,7 @@ class Album(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class Photo(models.Model):
+class Photo(UUIDModel):
     photo = models.ImageField('Photo', 'photo', upload_to=get_upload_path)
     private = models.BooleanField(default=False)
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
@@ -29,7 +37,7 @@ class Photo(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class Tag(models.Model):
+class Tag(UUIDModel):
     tag = models.CharField(max_length=50,
                            validators=[RegexValidator('^\w+$', 'Tag contains invalid characters'),
                                        MinLengthValidator(1)],
@@ -39,7 +47,7 @@ class Tag(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class PhotoTag(models.Model):
+class PhotoTag(UUIDModel):
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
     photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
 
