@@ -62,7 +62,8 @@
                     <li class="list-group-item text-center">
                         {% if tags != 0 %}
                             {% for tag in tags_list %}
-                                <span class="badge badge-secondary">{{ tag.tag }}</span>
+                                <a class="badge badge-secondary"
+                                   href="{% url 'webimage:gallery_tags_tag' tag.tag %}">{{ tag.tag }}</a>
                             {% endfor %}
                         {% else %}
                             <span class="text-secondary">You have no tags yet :(</span>

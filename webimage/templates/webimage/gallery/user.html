@@ -24,7 +24,7 @@
                     {{ profile.username }}'s statistical information:
                 </p>
                 <ul class="list-group">
-                    <li class="list-group-item">
+                    <li class="list-group-item bg-di-2xlighter">
                         <div class="float-left">
                             <span class="fa fa-folder-open"></span>
                             <span>Albums</span>
@@ -34,7 +34,7 @@
                             <span class="badge badge-pill badge-warning">#{{ albums_rank }}</span>
                         </div>
                     </li>
-                    <li class="list-group-item">
+                    <li class="list-group-item bg-di-2xlighter">
                         <div class="float-left">
                             <span class="fa fa-photo"></span>
                             <span>Photos</span>
@@ -44,7 +44,7 @@
                             <span class="badge badge-pill badge-warning">#{{ photos_rank }}</span>
                         </div>
                     </li>
-                    <li class="list-group-item">
+                    <li class="list-group-item bg-di-2xlighter">
                         <div class="float-left">
                             <span class="fa fa-tags"></span>
                             <span>Tags</span>
@@ -59,7 +59,7 @@
                     Here are some of {{ user.username }}'s tags :
                 </p>
                 <ul class="list-group">
-                    <li class="list-group-item text-center">
+                    <li class="list-group-item text-center bg-di-2xlighter">
                         {% if tags != 0 %}
                             {% for tag in tags_list %}
                                 <span class="badge badge-secondary">{{ tag.tag }}</span>
