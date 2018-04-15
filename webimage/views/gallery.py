@@ -3,7 +3,8 @@ from django.shortcuts import render
 from django.views.generic import View
 from ..models import User, Album, Photo, PhotoTag, Tag
 from .models.userview import user_albums_rank, user_photos_rank, user_tags_rank, user_tags, user_albums, user_photos
-from .models.albumview import album_photos, album_tags
+from .models.albumview import album_photos, album_tags, album_photos_rank, album_tags_rank
+from .models.photoview import photo_tags
 from .models.tagview import tag_phototags
 
 
@@ -96,9 +97,33 @@ class UserView(View):
 
 class AlbumView(View):
     def get(self, request, user, album):
+        user = UserView.get_profile_or_404(user)
+        album = AlbumView.get_album_or_404(album)
+        photos = album_photos(album)
+        tags = album_tags(album)
+        context = {
+            'profile': user,
+            'album': album,
+            'photos_count': album_photos(album).count(),
+            'photos_rank': album_photos_rank(album),
+            'tags_count': tags.count(),
+            'tags_rank': album_tags_rank(album),
+            'tags_list': tags,
+            'photos': list(map(lambda photo: {
+                'photo': photo,
+                'tags': photo_tags(photo)
+            }, photos))
+        }
         return render(request, 'webimage/gallery/album.html',
-                      RenderObject.create(Fields.Users, True))
+                      RenderObject.create(Fields.Users, True, context))
 
+    @staticmethod
+    def get_album_or_404(album):
+        try:
+            album = Album.objects.get(uuid=album)
+            return album
+        except Album.DoesNotExist:
+            raise Http404("The album you're trying to acces does not exist")
 
 class PhotoView(View):
     def get(self, request, user, album, photo):

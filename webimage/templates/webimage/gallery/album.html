@@ -1,1 +1,122 @@
 {% extends 'webimage/gallery.html' %}
+{% block navigation %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'webimage:gallery' %}">Users</a>
+    </li>
+    <li>
+        <div class="nav-link"> ></div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'webimage:gallery_user' profile.username %}">{{ profile.username }}</a>
+    </li>
+    <li>
+        <div class="nav-link"> ></div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link disabled">{{ album.name }}</a>
+    </li>
+{% endblock %}
+{% block mainitem %}
+    <div class="card mb-2">
+        <div class="card-body">
+            <h5 class="mt-2 mb-1">
+                    <span class="text">
+                        {{ album.name }}
+                    </span>
+                <span> - </span>
+                <span class="text-primary">@</span><span class="text-secondary">{{ profile.username }}</span>
+            </h5>
+            <p class="text-secondary">
+                Album statistical information:
+            </p>
+            <ul class="list-group">
+                <li class="list-group-item bg-di-2xlighter">
+                    <div class="float-left">
+                        <span class="fa fa-photo"></span>
+                        <span>Photos</span>
+                    </div>
+                    <div class="float-right">
+                        <span class="badge badge-pill badge-primary">{{ photos_count }}</span>
+                        <span class="badge badge-pill badge-warning">#{{ photos_rank }}</span>
+                    </div>
+                </li>
+                <li class="list-group-item bg-di-2xlighter">
+                    <div class="float-left">
+                        <span class="fa fa-tags"></span>
+                        <span>Tags</span>
+                    </div>
+                    <div class="float-right">
+                        <span class="badge badge-pill badge-primary">{{ tags_count }}</span>
+                        <span class="badge badge-pill badge-warning">#{{ tags_rank }}</span>
+                    </div>
+                </li>
+            </ul>
+            <p class="text-secondary mt-2 mb-2">
+                Here are some of {{ profile.username }}'s tags :
+            </p>
+            <ul class="list-group">
+                <li class="list-group-item text-center bg-di-2xlighter">
+                    {% if tags_list|length != 0 %}
+                        {% for tag in tags_list %}
+                            <a class="badge badge-secondary"
+                               href="{% url 'webimage:gallery_tags_tag' tag.tag %}">{{ tag.tag }}</a>
+                        {% endfor %}
+                    {% else %}
+                        <span class="text-secondary">{{ profile.username }} has no tags yet. :(</span>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+
+{% endblock %}
+{% block gallery %}
+    {% if photos|length > 0 %}
+        {% for p in photos %}
+            <div class="col-sm-6 col-md-4 col-lg-3 mt-2 mb-2">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <i class="fa fa-photo"></i>
+                        <a class="card-link"
+                           href="{% url 'webimage:gallery_user_album_photo' profile.username album.uuid p.photo.uuid %}">
+                            <span class="text">{{ p.photo.created_at|date:'Y-m-d' }}</span>
+                        </a>
+                    </div>
+                    <ul class="list-group">
+                         <a class="card-link"
+                           href="{% url 'webimage:gallery_user_album_photo' profile.username album.uuid p.photo.uuid %}">
+                           <img class="card-img-top" src="{{ p.photo.photo.url }}">
+                        </a>
+{#                        <li class="list-group-item">#}
+{#                            <span class="float-left">Photos</span>#}
+{#                            <span class="float-right">#}
+{#                                <span class="badge badge-pill badge-primary">{{ album.photos }}</span>#}
+{#                            </span>#}
+{#                        </li>#}
+{#                        <li class="list-group-item">#}
+{#                            <span class="float-left">Tags</span>#}
+{#                            <span class="float-right"><span class="float-right">#}
+{#                                <span class="badge badge-pill badge-primary">{{ album.tags }}</span>#}
+{#                            </span></span>#}
+{#                        </li>#}
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        {% if user != profile %}
+            <div class="text-center w-100">
+                <span class="text color-di">{{ profile.username }} has no albums yet :(</span>
+            </div>
+        {% endif %}
+    {% endif %}
+    {% if user == profile %}
+        <div class="col-sm-6 col-md-4 col-lg-3 mt-2 mb-2">
+            <div class="card">
+                <div class="card-header text-center">
+                    <a class="card-link" href="#"><i class="fa fa-plus-circle"></i> New album</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
