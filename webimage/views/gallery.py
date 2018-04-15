@@ -4,6 +4,7 @@ from django.views.generic import View
 from ..models import User, Album, Photo, PhotoTag, Tag
 from .models.userview import user_albums_rank, user_photos_rank, user_tags_rank, user_tags, user_albums, user_photos
 from .models.albumview import album_photos, album_tags
+from .models.tagview import tag_phototags
 
 
 class Fields:
@@ -110,7 +111,10 @@ class TagsView(View):
         tagstring = request.GET.get('tagstring', None)
         tags = TagsView.filter(tagstring)
         context = {
-            'tags': tags,
+            'tags': list(map(lambda tag: {
+                'tag': tag,
+                'usages': tag_phototags(tag).count()
+            }, tags)),
             'filter': tagstring,
         }
         return render(request, 'webimage/gallery/tags.html',
@@ -126,5 +130,17 @@ class TagsView(View):
 
 class TagView(View):
     def get(self, request, tag):
+        tag = TagView.get_tag_or_404(tag)
+        context = {
+            'tag': tag,
+        }
         return render(request, 'webimage/gallery/tag.html',
-                      RenderObject.create(Fields.Tags, False))
+                      RenderObject.create(Fields.Tags, False, context))
+
+    @staticmethod
+    def get_tag_or_404(tag):
+        try:
+            tag = Tag.objects.get(tag=tag)
+            return tag
+        except Tag.DoesNotExist:
+            raise Http404("The tag you're trying to access does not exist")
