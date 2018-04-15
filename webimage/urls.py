@@ -1,6 +1,8 @@
 from django.urls import path, include
 from django.contrib.auth.decorators import login_required
 from .views import views, gallery
+from django.conf.urls.static import static
+from django.conf import settings
 
 
 def auth_required(view):
@@ -22,3 +24,5 @@ urlpatterns = [
         path('<str:user>/<uuid:album>/<uuid:photo>/', auth_required(gallery.PhotoView), name='gallery_user_album_photo')
     ])),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

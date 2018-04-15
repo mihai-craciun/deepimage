@@ -1,14 +1,14 @@
 from django.db import models
 from django.core.validators import RegexValidator, MinLengthValidator
 from django.contrib.auth.models import User
-from time import strftime
+from datetime import datetime
 from uuid import uuid4
 
 
 def get_upload_path(instance, filename):
     return '/'.join(
-        ['public', instance.album.user.username, str(instance.album.id),
-         '{0}_{1}.{2}'.format(strftime('%d%m%Y%H%M%S'), '.'.join(filename.split('.')[:-1]), filename.split('.')[-1])])
+        [instance.album.user.username, str(instance.album.uuid),
+         '{0}.{1}'.format(datetime.utcnow().strftime('%d-%m-%Y_%H-%M-%S.%f'),filename.split('.')[-1])])
 
 
 # Create your models here.
