@@ -1,7 +1,9 @@
+from django.http import Http404
 from django.shortcuts import render
 from django.views.generic import View
 from ..models import User, Album, Photo, PhotoTag, Tag
-from .models.userview import user_albums_rank, user_photos_rank, user_tags_rank
+from .models.userview import user_albums_rank, user_photos_rank, user_tags_rank, user_tags, user_albums, user_photos
+from .models.albumview import album_photos, album_tags
 
 
 class Fields:
@@ -61,10 +63,34 @@ class UsersView(View):
 
 class UserView(View):
     def get(self, request, user):
-        profile = User.objects.get(username=user)
-        context = {'profile': profile}
+        profile = UserView.get_profile_or_404(user)
+        tags = user_tags(profile)
+        albums = user_albums(profile)
+        context = {
+            'profile': profile,
+            'albums_count': albums.count(),
+            'albums_rank': user_albums_rank(profile),
+            'photos_count': user_photos(profile).count(),
+            'photos_rank': user_photos_rank(profile),
+            'tags_count': tags.count(),
+            'tags_rank': user_tags_rank(profile),
+            'tags_list': tags[:5],
+            'albums': list(map(lambda album: {
+                'album': album,
+                'photos': album_photos(album).count(),
+                'tags': album_tags(album).count(),
+            }, albums))
+        }
         return render(request, 'webimage/gallery/user.html',
                       RenderObject.create(Fields.Users, True, context))
+
+    @staticmethod
+    def get_profile_or_404(user):
+        try:
+            profile = User.objects.get(username=user)
+            return profile
+        except User.DoesNotExist:
+            raise Http404("The profile you're trying to access does not exist")
 
 
 class AlbumView(View):
