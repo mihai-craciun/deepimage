@@ -20,12 +20,15 @@ class UUIDModel(models.Model):
 
 
 class Album(UUIDModel):
-    name = models.CharField(max_length=50, validators=[MinLengthValidator(1)], unique=True)
+    name = models.CharField(max_length=50, validators=[MinLengthValidator(1)])
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     private = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('name', 'user')
 
 
 class Photo(UUIDModel):
