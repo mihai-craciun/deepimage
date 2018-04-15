@@ -15,7 +15,7 @@
 {% block gallery %}
     {% if tags|length > 0 %}
         {% for tag in tags %}
-            <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="col-sm-6 col-md-4 col-lg-3 mt-2 mb-2">
                 <div class="card">
                     <div class="card-header text-center">
                         <a class="card-link badge badge-secondary" href="{% url 'webimage:gallery_tags_tag' tag.tag %}">
