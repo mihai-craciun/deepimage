@@ -110,11 +110,13 @@ class TagsView(View):
     def get(self, request):
         tagstring = request.GET.get('tagstring', None)
         tags = TagsView.filter(tagstring)
-        context = {
-            'tags': list(map(lambda tag: {
+        tags = list(map(lambda tag: {
                 'tag': tag,
                 'usages': tag_phototags(tag).count()
-            }, tags)),
+            }, tags))
+        tags = sorted(tags, key=lambda t: t['usages'], reverse=True)
+        context = {
+            'tags': tags,
             'filter': tagstring,
         }
         return render(request, 'webimage/gallery/tags.html',
