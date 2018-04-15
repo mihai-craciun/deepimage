@@ -3,4 +3,31 @@
     <li class="nav-item">
         <a class="nav-link" href="{% url 'webimage:gallery_tags' %}">Tags</a>
     </li>
+    {% if filter %}
+        <li class="nav-item">
+            <a class="nav-link disabled">></a>
+        </li>
+        <li class="nav-item>">
+            <a class="nav-link disabled">Search results for <i>{{ filter }}</i></a>
+        </li>
+    {% endif %}
+{% endblock %}
+{% block gallery %}
+    {% if tags|length > 0 %}
+        {% for tag in tags %}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <a class="card-link badge badge-secondary" href="{% url 'webimage:gallery_tags_tag' tag.tag %}">
+                            <span class="text-primary"></span><span class="text">{{ tag.tag }}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="text-center w-100">
+            <span class="text color-di">No results were found :(</span>
+        </div>
+    {% endif %}
 {% endblock %}

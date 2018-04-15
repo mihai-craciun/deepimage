@@ -107,8 +107,21 @@ class PhotoView(View):
 
 class TagsView(View):
     def get(self, request):
+        tagstring = request.GET.get('tagstring', None)
+        tags = TagsView.filter(tagstring)
+        context = {
+            'tags': tags,
+            'filter': tagstring,
+        }
         return render(request, 'webimage/gallery/tags.html',
-                      RenderObject.create(Fields.Tags, True))
+                      RenderObject.create(Fields.Tags, True, context))
+
+    @staticmethod
+    def filter(tagstring):
+        if tagstring is None:
+            return Tag.objects.all()
+        else:
+            return Tag.objects.filter(tag__icontains=tagstring)
 
 
 class TagView(View):
