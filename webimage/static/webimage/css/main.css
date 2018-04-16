@@ -50,3 +50,7 @@ body {
 .color-di {
     color: #1d5263 !important;
 }
+
+img.gallery-img {
+    object-fit: cover;
+}

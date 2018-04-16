@@ -82,23 +82,21 @@
                             <span class="text">{{ p.photo.created_at|date:'Y-m-d' }}</span>
                         </a>
                     </div>
+                    <a class="card-link"
+                       href="{% url 'webimage:gallery_user_album_photo' profile.username album.uuid p.photo.uuid %}">
+                        <img class="card-img-top gallery-img" src="{{ p.photo.photo.url }}">
+                    </a>
                     <ul class="list-group">
-                         <a class="card-link"
-                           href="{% url 'webimage:gallery_user_album_photo' profile.username album.uuid p.photo.uuid %}">
-                           <img class="card-img-top" src="{{ p.photo.photo.url }}">
-                        </a>
-{#                        <li class="list-group-item">#}
-{#                            <span class="float-left">Photos</span>#}
-{#                            <span class="float-right">#}
-{#                                <span class="badge badge-pill badge-primary">{{ album.photos }}</span>#}
-{#                            </span>#}
-{#                        </li>#}
-{#                        <li class="list-group-item">#}
-{#                            <span class="float-left">Tags</span>#}
-{#                            <span class="float-right"><span class="float-right">#}
-{#                                <span class="badge badge-pill badge-primary">{{ album.tags }}</span>#}
-{#                            </span></span>#}
-{#                        </li>#}
+                        <li class="list-group-item">
+                            {% if p.tags|length > 0 %}
+                                {% for tag in p.tags %}
+                                    <a href="{% url 'webimage:gallery_tags_tag' tag.tag %}"
+                                       class="badge badge-secondary">{{ tag.tag }}</a>
+                                {% endfor %}
+                            {% else %}
+                                <span class="text-secondary">No tags :(</span>
+                            {% endif %}
+                        </li>
                     </ul>
                 </div>
             </div>

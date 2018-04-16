@@ -111,7 +111,7 @@ class AlbumView(View):
             'tags_list': tags,
             'photos': list(map(lambda photo: {
                 'photo': photo,
-                'tags': photo_tags(photo)
+                'tags': photo_tags(photo)[:5]
             }, photos))
         }
         return render(request, 'webimage/gallery/album.html',
