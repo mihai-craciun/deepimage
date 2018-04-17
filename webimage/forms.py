@@ -45,3 +45,7 @@ class AlbumForm(forms.Form):
         attrs={'class': 'form-control'}), required=True, error_messages={'required': 'Album name is required.'})
     private = forms.BooleanField(label='Private', initial=False,
                                  widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}), required=False)
+
+
+class ImagesForm(forms.Form):
+    images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True, 'class': 'custom-file-input'}))
