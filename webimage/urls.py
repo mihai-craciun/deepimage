@@ -23,6 +23,8 @@ urlpatterns = [
         path('<str:user>/<uuid:album>/', auth_required(gallery.AlbumView), name='gallery_user_album'),
         path('<str:user>/<uuid:album>/<uuid:photo>/', auth_required(gallery.PhotoView), name='gallery_user_album_photo')
     ])),
+    path('albums/add', auth_required(gallery.AlbumAddView), name='album_add'),
+    path('albums/<uuid:album>/edit', auth_required(gallery.AlbumEditView), name='album_edit')
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,7 +1,8 @@
-from django.http import Http404
-from django.shortcuts import render
+from django.http import Http404, HttpResponseForbidden
+from django.shortcuts import render, redirect
 from django.views.generic import View
 from ..models import User, Album, Photo, PhotoTag, Tag
+from ..forms import AlbumForm
 from .models.userview import user_albums_rank, user_photos_rank, user_tags_rank, user_tags, user_albums, user_photos
 from .models.albumview import album_photos, album_tags, album_photos_rank, album_tags_rank
 from .models.photoview import photo_tags
@@ -117,6 +118,15 @@ class AlbumView(View):
         return render(request, 'webimage/gallery/album.html',
                       RenderObject.create(Fields.Users, True, context))
 
+    def post(self, request, user, album):
+        method = request.POST.get('method', None)
+        if method == 'delete':
+            Album.objects.get(uuid=album).delete()
+            return redirect('webimage:gallery_user', user)
+        if method == 'patch':
+            # patch
+            return redirect('webimage:gallery_user_album', user, album)
+
     @staticmethod
     def get_album_or_404(album):
         try:
@@ -124,6 +134,80 @@ class AlbumView(View):
             return album
         except Album.DoesNotExist:
             raise Http404("The album you're trying to acces does not exist")
+
+
+class AlbumAddView(View):
+    def get(self, request):
+        form = AlbumForm()
+        context = {
+            'form': form
+        }
+        return render(request, 'webimage/gallery/album_add.html',
+                      RenderObject.create(Fields.Users, False, context))
+
+    def post(self, request):
+        form = AlbumForm(request.POST)
+
+        if form.is_valid():
+            data = form.cleaned_data
+
+            # Check if album exists
+            album = Album.objects.filter(user=request.user).filter(name=data['name'])
+
+            if len(album) == 0:
+                album = Album.objects.create(user=request.user, name=data['name'], private=data['private'])
+                return redirect('webimage:gallery_user_album', request.user.username, album.uuid)
+            else:
+                form.add_error('name', 'You already have an album with this name')
+                context = {'form': form}
+                return render(request, 'webimage/gallery/album_add.html',
+                              RenderObject.create(Fields.Users, False, context))
+
+
+class AlbumEditView(View):
+    def get(self, request, album):
+
+        album = AlbumView.get_album_or_404(album)
+        if album.user != request.user:
+            return HttpResponseForbidden()
+
+        form = AlbumForm(initial={
+            'name': album.name,
+            'private': album.private
+        })
+
+        context = {
+            'album': album,
+            'form': form
+        }
+        return render(request, 'webimage/gallery/album_edit.html',
+                      RenderObject.create(Fields.Users, False, context))
+
+    def post(self, request, album):
+
+        album = AlbumView.get_album_or_404(album)
+        if album.user != request.user:
+            return HttpResponseForbidden()
+
+        form = AlbumForm(request.POST)
+
+        if form.is_valid():
+            data = form.cleaned_data
+
+            # Check if album exists
+            name_album = Album.objects.filter(user=request.user).filter(name=data['name'])
+
+            if len(name_album) == 0 or (len(name_album) == 1 and name_album[0].uuid == album.uuid):
+                album.name = data['name']
+                album.private = data['private']
+                album.save()
+                return redirect('webimage:gallery_user_album', request.user.username, album.uuid)
+            else:
+                form.add_error('name', 'You already have an album with this name')
+                context = {'form': form}
+                return render(request, 'webimage/gallery/album_edit.html',
+                              RenderObject.create(Fields.Users, False, context))
+
 
 class PhotoView(View):
     def get(self, request, user, album, photo):
@@ -136,9 +220,9 @@ class TagsView(View):
         tagstring = request.GET.get('tagstring', None)
         tags = TagsView.filter(tagstring)
         tags = list(map(lambda tag: {
-                'tag': tag,
-                'usages': tag_phototags(tag).count()
-            }, tags))
+            'tag': tag,
+            'usages': tag_phototags(tag).count()
+        }, tags))
         tags = sorted(tags, key=lambda t: t['usages'], reverse=True)
         context = {
             'tags': tags,

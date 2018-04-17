@@ -1,0 +1,48 @@
+{% extends 'webimage/gallery.html' %}
+{% block navigation %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'webimage:gallery' %}">Users</a>
+    </li>
+    <li>
+        <div class="nav-link"> ></div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'webimage:gallery_user' user.username %}">{{ user.username }}</a>
+    </li>
+    <li>
+        <div class="nav-link"> ></div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link disabled">New album</a>
+    </li>
+{% endblock %}
+{% block mainitem %}
+    <div class="card mb-2">
+        <div class="card-body">
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <div class="alert alert-danger">
+                        <span>{{ error }}</span>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            <form action="{% url 'webimage:album_add' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group mt-2 mb-1">
+                    <label for="{{ form.name.id_for_label }}">Album name :</label>
+                    {{ form.name }}
+                    <small id="emailHelp" class="form-text text-muted">This is the name of your new album.
+                    </small>
+                </div>
+                <div class="form-check">
+                    {{ form.private }}
+                    <label class="form-check-label" for="{{ form.private.id_for_label }}">Private</label>
+                </div>
+                <hr>
+                <button type="submit" class="btn btn-success m-2"><i class="fa fa-check"></i> Save</button>
+                <a href="{% url 'webimage:gallery_user' user.username %}" class="btn btn-danger text-white m-2"><i
+                        class="fa fa-times"></i> Cancel</a>
+            </form>
+        </div>
+    </div>
+{% endblock %}

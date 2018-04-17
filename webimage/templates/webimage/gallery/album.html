@@ -19,6 +19,23 @@
 {% block mainitem %}
     <div class="card mb-2">
         <div class="card-body">
+            {% if profile == user %}
+                <div class="float-right btn-group" role="group">
+                    <form class="m-1" action="{% url 'webimage:gallery_user_album' profile.username album.uuid %}"
+                          method="POST">
+                        <input type="hidden" name="method" value="delete">
+                        {% csrf_token %}
+                        <button class="btn btn-danger" type="submit" onclick="return confirm('Delete this album?')">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </form>
+                    <span class="m-1">
+                        <a class="btn btn-primary" href="{% url 'webimage:album_edit' album.uuid %}">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    </span>
+                </div>
+            {% endif %}
             <h5 class="mt-2 mb-1">
                     <span class="text">
                         {{ album.name }}
