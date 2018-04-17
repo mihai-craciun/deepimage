@@ -121,7 +121,7 @@
     {% else %}
         {% if user != profile %}
             <div class="text-center w-100">
-                <span class="text color-di">{{ profile.username }} has no albums yet :(</span>
+                <span class="text color-di">{{ profile.username }} has no photos in <i>{{ album.name }}</i> yet :(</span>
             </div>
         {% endif %}
     {% endif %}
