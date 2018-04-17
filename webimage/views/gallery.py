@@ -121,11 +121,11 @@ class AlbumView(View):
     def post(self, request, user, album):
         method = request.POST.get('method', None)
         if method == 'delete':
-            Album.objects.get(uuid=album).delete()
+            if user != request.user.username:
+                return HttpResponseForbidden()
+            album = AlbumView.get_album_or_404(album)
+            album.delete()
             return redirect('webimage:gallery_user', user)
-        if method == 'patch':
-            # patch
-            return redirect('webimage:gallery_user_album', user, album)
 
     @staticmethod
     def get_album_or_404(album):
