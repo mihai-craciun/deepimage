@@ -40,7 +40,7 @@
                 </div>
                 <hr>
                 <button type="submit" class="btn btn-success m-2"><i class="fa fa-check"></i> Save</button>
-                <a href="{% url 'webimage:gallery_user' user.username %}" class="btn btn-danger text-white m-2"><i
+                <a href="{% url 'webimage:gallery_user_album' user.username album.uuid %}" class="btn btn-danger text-white m-2"><i
                         class="fa fa-times"></i> Cancel</a>
             </form>
         </div>
