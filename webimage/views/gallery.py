@@ -69,6 +69,10 @@ class UserView(View):
         profile = UserView.get_profile_or_404(user)
         tags = user_tags(profile)
         albums = user_albums(profile)
+
+        if user != request.user.username:
+            albums = albums.filter(private=False)
+
         context = {
             'profile': profile,
             'albums_count': albums.count(),
@@ -102,6 +106,12 @@ class AlbumView(View):
         album = AlbumView.get_album_or_404(album)
         photos = album_photos(album)
         tags = album_tags(album)
+
+        if album.user != user:
+            raise Http404("Album does not exist")
+        if album.private and user != request.user:
+            raise Http404("Album does not exist")
+
         context = {
             'profile': user,
             'album': album,
