@@ -8,7 +8,7 @@ from uuid import uuid4
 def get_upload_path(instance, filename):
     return '/'.join(
         [instance.album.user.username, str(instance.album.uuid),
-         '{0}.{1}'.format(datetime.utcnow().strftime('%d-%m-%Y_%H-%M-%S.%f'),filename.split('.')[-1])])
+         '{0}.{1}'.format(datetime.utcnow().strftime('%d-%m-%Y_%H-%M-%S.%f'), filename.split('.')[-1])])
 
 
 # Create your models here.
@@ -53,6 +53,7 @@ class Tag(UUIDModel):
 class PhotoTag(UUIDModel):
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
     photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
+    score = models.FloatField('Accuracy score', 'score')
 
     created_at = models.DateTimeField(auto_now_add=True)
 
