@@ -223,8 +223,32 @@ class AlbumEditView(View):
 
 class PhotoView(View):
     def get(self, request, user, album, photo):
-        return render(request, 'webimage/gallery/album.html',
-                      RenderObject.create(Fields.Users, False))
+        album = AlbumView.get_album_or_404(album)
+        profile = UserView.get_profile_or_404(user)
+        photo = PhotoView.get_photo_or_404(photo)
+        if album.user != profile:
+            return Http404()
+        if photo.album != album:
+            return Http404()
+        if photo.private and request.user != profile:
+            return Http404()
+        context = {
+            'profile': profile,
+            'album': album,
+            'photo': photo,
+            'photo_name': photo.photo.url.split('/')[-1],
+            'tags': photo_tags(photo)
+        }
+        return render(request, 'webimage/gallery/photo.html',
+                      RenderObject.create(Fields.Users, False, context))
+
+    @staticmethod
+    def get_photo_or_404(photo):
+        try:
+            photo = Photo.objects.get(uuid=photo)
+            return photo
+        except Photo.DoesNotExist:
+            raise Http404("The photo you're trying to acces does not exist")
 
 
 class PhotoAddView(View):

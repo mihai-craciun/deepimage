@@ -1,1 +1,68 @@
 {% extends 'webimage/gallery.html' %}
+{% block navigation %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'webimage:gallery' %}">Users</a>
+    </li>
+    <li>
+        <div class="nav-link"> ></div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'webimage:gallery_user' profile.username %}">{{ profile.username }}</a>
+    </li>
+    <li>
+        <div class="nav-link"> ></div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link"
+           href="{% url 'webimage:gallery_user_album' profile.username album.uuid %}">{{ album.name }}</a>
+    </li>
+    <li>
+        <div class="nav-link"> ></div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link disabled" href="">{{ photo_name }}</a>
+    </li>
+{% endblock %}
+{% block mainitem %}
+    <div class="card mb-2">
+        <div class="card-body">
+            {% if profile == user %}
+                <div class="float-right btn-group" role="group">
+                    <form class="m-1" action="{% url 'webimage:album_delete' album.uuid %}" method="POST">
+                        {% csrf_token %}
+                        <button class="btn btn-warning" type="submit" onclick="return confirm('Update the tags?')">
+                            <i class="fa fa-tags"></i> Update tags
+                        </button>
+                    </form>
+                    <form class="m-1" action="{% url 'webimage:album_delete' album.uuid %}" method="POST">
+                        {% csrf_token %}
+                        <button class="btn btn-danger" type="submit" onclick="return confirm('Delete this photo?')">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            {% endif %}
+            <h5>
+                <span class="text-primary">@</span><span class="text-secondary">{{ profile.username }}</span>
+                <span>:</span>
+                <a class="text-secondary" href="{{ photo.photo.url }}">{{ photo_name }}</a>
+            </h5>
+            <br>
+            <ul class="list-group">
+                <li class="list-group-item text-center bg-di-2xlighter">
+                    {% if tags|length != 0 %}
+                        {% for tag in tags %}
+                            <a class="badge badge-secondary"
+                               href="{% url 'webimage:gallery_tags_tag' tag.tag %}">{{ tag.tag }}</a>
+                        {% endfor %}
+                    {% else %}
+                        <span class="text-secondary">{{ profile.username }} has no tags yet. :(</span>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="card bg-di-gallery text-center">
+        <img class="deepimage-img mb-5 mt-5" src="{{ photo.photo.url }}">
+    </div>
+{% endblock %}
