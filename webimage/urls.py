@@ -24,6 +24,7 @@ urlpatterns = [
         path('<str:user>/<uuid:album>/<uuid:photo>/', auth_required(gallery.PhotoView), name='gallery_user_album_photo')
     ])),
     path('albums/add', auth_required(gallery.AlbumAddView), name='album_add'),
+    path('albums/<uuid:album>/delete', auth_required(gallery.AlbumDeleteView), name='album_delete'),
     path('albums/<uuid:album>/edit', auth_required(gallery.AlbumEditView), name='album_edit')
 ]
 if settings.DEBUG:

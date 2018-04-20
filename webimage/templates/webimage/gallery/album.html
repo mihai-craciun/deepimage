@@ -21,9 +21,7 @@
         <div class="card-body">
             {% if profile == user %}
                 <div class="float-right btn-group" role="group">
-                    <form class="m-1" action="{% url 'webimage:gallery_user_album' profile.username album.uuid %}"
-                          method="POST">
-                        <input type="hidden" name="method" value="delete">
+                    <form class="m-1" action="{% url 'webimage:album_delete' album.uuid %}" method="POST">
                         {% csrf_token %}
                         <button class="btn btn-danger" type="submit" onclick="return confirm('Delete this album?')">
                             <i class="fa fa-trash"></i>

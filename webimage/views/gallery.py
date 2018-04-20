@@ -128,15 +128,6 @@ class AlbumView(View):
         return render(request, 'webimage/gallery/album.html',
                       RenderObject.create(Fields.Users, True, context))
 
-    def post(self, request, user, album):
-        method = request.POST.get('method', None)
-        if method == 'delete':
-            if user != request.user.username:
-                return HttpResponseForbidden()
-            album = AlbumView.get_album_or_404(album)
-            album.delete()
-            return redirect('webimage:gallery_user', user)
-
     @staticmethod
     def get_album_or_404(album):
         try:
@@ -144,6 +135,15 @@ class AlbumView(View):
             return album
         except Album.DoesNotExist:
             raise Http404("The album you're trying to acces does not exist")
+
+
+class AlbumDeleteView(View):
+    def post(self, request, album):
+        album = AlbumView.get_album_or_404(album)
+        if album.user.username != request.user.username:
+            return HttpResponseForbidden()
+        album.delete()
+        return redirect('webimage:gallery_user', request.user.username)
 
 
 class AlbumAddView(View):
