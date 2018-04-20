@@ -48,4 +48,4 @@ class AlbumForm(forms.Form):
 
 
 class ImagesForm(forms.Form):
-    images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True, 'class': 'custom-file-input'}))
+    images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True, 'class': 'form-control-file'}))

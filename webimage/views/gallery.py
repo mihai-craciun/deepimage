@@ -2,7 +2,7 @@ from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.views.generic import View
 from ..models import User, Album, Photo, PhotoTag, Tag
-from ..forms import AlbumForm
+from ..forms import AlbumForm, ImagesForm
 from .models.userview import user_albums_rank, user_photos_rank, user_tags_rank, user_tags, user_albums, user_photos
 from .models.albumview import album_photos, album_tags, album_photos_rank, album_tags_rank
 from .models.photoview import photo_tags
@@ -106,6 +106,7 @@ class AlbumView(View):
         album = AlbumView.get_album_or_404(album)
         photos = album_photos(album)
         tags = album_tags(album)
+        form = ImagesForm()
 
         if album.user != user:
             raise Http404("Album does not exist")
@@ -120,6 +121,7 @@ class AlbumView(View):
             'tags_count': tags.count(),
             'tags_rank': album_tags_rank(album),
             'tags_list': tags,
+            'form': form,
             'photos': list(map(lambda photo: {
                 'photo': photo,
                 'tags': photo_tags(photo)[:5]
@@ -223,6 +225,21 @@ class PhotoView(View):
     def get(self, request, user, album, photo):
         return render(request, 'webimage/gallery/album.html',
                       RenderObject.create(Fields.Users, False))
+
+
+class PhotoAddView(View):
+    def post(self, request, album):
+        album = AlbumView.get_album_or_404(album)
+        if album.user != request.user:
+            return HttpResponseForbidden()
+
+        form = ImagesForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            for image in request.FILES.getlist('images'):
+                photo = Photo.objects.create(photo=image, album=album)
+                photo.save()
+        return redirect('webimage:gallery_user_album', request.user, album.uuid)
 
 
 class TagsView(View):

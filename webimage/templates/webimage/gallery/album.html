@@ -127,7 +127,20 @@
         <div class="col-sm-6 col-md-4 col-lg-3 mt-2 mb-2">
             <div class="card">
                 <div class="card-header text-center">
-                    <a class="card-link" href="#"><i class="fa fa-plus-circle"></i> Add more photos</a>
+                    <a id='files-input-a' class="card-link" href="#"
+                       onclick="(function(){$('#files').show();$('#files-input-a').removeAttr('href');})();"><i
+                            class="fa fa-plus-circle"></i>
+                        Add more photos</a>
+                </div>
+                <div id="files" style="display: none" class="card-body">
+                    <form action="{% url 'webimage:photo_add' album.uuid %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="{{ form.images.id_for_label }}">Select photos</label>
+                            {{ form.images }}
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload <i class="fa fa-upload"></i> </button>
+                    </form>
                 </div>
             </div>
         </div>
