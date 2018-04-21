@@ -11,5 +11,29 @@
     </li>
 {% endblock %}
 {% block mainitem %}
-
+{% endblock %}
+{% block gallery %}
+    {% if photos|length > 0 %}
+        {% for p in photos %}
+            <div class="col-sm-6 col-md-4 col-lg-3 mt-2 mb-2">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <i class="fa fa-photo"></i>
+                        <a class="card-link"
+                           href="{% url 'webimage:gallery_user_album_photo' p.album.user.username p.album.uuid p.uuid %}">
+                            <span class="text">{{ p.created_at|date:'Y-m-d' }}</span>
+                        </a>
+                    </div>
+                    <a class="card-link"
+                       href="{% url 'webimage:gallery_user_album_photo' p.album.user.username p.album.uuid p.uuid %}">
+                        <img class="card-img-top gallery-img" src="{{ p.photo.url }}">
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="text-center w-100">
+            <span class="text color-di">There are no photos visible for this tag :(</span>
+        </div>
+    {% endif %}
 {% endblock %}

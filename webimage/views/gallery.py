@@ -403,11 +403,15 @@ class TagsView(View):
 class TagView(View):
     def get(self, request, tag):
         tag = TagView.get_tag_or_404(tag)
+        p_tags = PhotoTag.objects.filter(tag=tag)
+        photos = list(map(lambda pt: pt.photo, p_tags))
+        photos = list(filter(lambda p: not p.album.private or p.album.user == request.user, photos))
         context = {
             'tag': tag,
+            'photos': photos,
         }
         return render(request, 'webimage/gallery/tag.html',
-                      RenderObject.create(Fields.Tags, False, context))
+                      RenderObject.create(Fields.Tags, True, context))
 
     @staticmethod
     def get_tag_or_404(tag):
