@@ -28,13 +28,13 @@
         <div class="card-body">
             {% if profile == user %}
                 <div class="float-right btn-group" role="group">
-                    <form class="m-1" action="{% url 'webimage:album_delete' album.uuid %}" method="POST">
+                    <form class="m-1" action="{% url 'webimage:photo_tagging' album.uuid photo.uuid %}" method="POST">
                         {% csrf_token %}
-                        <button class="btn btn-warning" type="submit" onclick="return confirm('Update the tags?')">
+                        <button class="btn btn-warning" type="submit">
                             <i class="fa fa-tags"></i> Update tags
                         </button>
                     </form>
-                    <form class="m-1" action="{% url 'webimage:album_delete' album.uuid %}" method="POST">
+                    <form class="m-1" action="{% url 'webimage:photo_delete' album.uuid photo.uuid %}" method="POST">
                         {% csrf_token %}
                         <button class="btn btn-danger" type="submit" onclick="return confirm('Delete this photo?')">
                             <i class="fa fa-trash"></i>
@@ -51,12 +51,21 @@
             <ul class="list-group">
                 <li class="list-group-item text-center bg-di-2xlighter">
                     {% if tags|length != 0 %}
-                        {% for tag in tags %}
-                            <a class="badge badge-secondary"
-                               href="{% url 'webimage:gallery_tags_tag' tag.tag %}">{{ tag.tag }}</a>
+                        {% for pt in tags %}
+                            <div class="badge badge-secondary">
+                                <a style="text-decoration: none;" class="text-white"
+                                   href="{% url 'webimage:gallery_tags_tag' pt.tag.tag %}">{{ pt.tag.tag }}</a>
+                                <a class="text-light" onclick="$('#{{ pt.uuid }}').submit()">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                                <form id="{{ pt.uuid }}" method="post"
+                                      action="{% url 'webimage:photo_tag_delete' album.uuid photo.uuid pt.uuid %}">
+                                    {% csrf_token %}
+                                </form>
+                            </div>
                         {% endfor %}
                     {% else %}
-                        <span class="text-secondary">{{ profile.username }} has no tags yet. :(</span>
+                        <span class="text-secondary">This photo has no tags yet. :(</span>
                     {% endif %}
                 </li>
             </ul>

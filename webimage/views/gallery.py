@@ -7,6 +7,8 @@ from .models.userview import user_albums_rank, user_photos_rank, user_tags_rank,
 from .models.albumview import album_photos, album_tags, album_photos_rank, album_tags_rank
 from .models.photoview import photo_tags
 from .models.tagview import tag_phototags
+from .tags_generation.generators import object_detection, action_recognition
+from PIL import Image
 
 
 class Fields:
@@ -237,7 +239,7 @@ class PhotoView(View):
             'album': album,
             'photo': photo,
             'photo_name': photo.photo.url.split('/')[-1],
-            'tags': photo_tags(photo)
+            'tags': PhotoTag.objects.filter(photo=photo)
         }
         return render(request, 'webimage/gallery/photo.html',
                       RenderObject.create(Fields.Users, False, context))
@@ -264,6 +266,94 @@ class PhotoAddView(View):
                 photo = Photo.objects.create(photo=image, album=album)
                 photo.save()
         return redirect('webimage:gallery_user_album', request.user, album.uuid)
+
+
+class PhotoDeleteView(View):
+    def post(self, request, album, photo):
+        user = request.user
+        album = AlbumView.get_album_or_404(album)
+        photo = PhotoView.get_photo_or_404(photo)
+        if album.user != user:
+            return Http404()
+        if photo.album != album:
+            return Http404()
+        photo.delete()
+        return redirect('webimage:gallery_user_album', user.username, album.uuid)
+
+
+class PhotoTaggingView(View):
+    def post(self, request, album, photo):
+        user = request.user
+        album = AlbumView.get_album_or_404(album)
+        photo = PhotoView.get_photo_or_404(photo)
+        if album.user != user:
+            return Http404()
+        if photo.album != album:
+            return Http404()
+        # Delete old tags
+        for pt in PhotoTag.objects.filter(photo=photo):
+            pt.delete()
+        # Using also action recognition
+        use_ar = False
+        # Create new tags
+        pil_img = Image.open(photo.photo)
+        try:
+            tags_scores = object_detection.generate_tags(pil_img)
+        except:
+            tags_scores = []
+        for ts in tags_scores:
+            ts_tag = ts['tag']
+            # There's a person, use action recognition
+            if ts_tag == 'person':
+                use_ar = True
+            ts_score = ts['score']
+            tag = Tag.objects.filter(tag=ts_tag)
+            if len(tag) == 0:
+                tag = Tag.objects.create(tag=ts_tag)
+                tag.save()
+            else:
+                tag = tag[0]
+            pt = PhotoTag.objects.create(tag=tag, score=ts_score, photo=photo)
+            pt.save()
+        if use_ar:
+            try:
+                tss = [action_recognition.generate_tags(pil_img)]
+            except:
+                tss =[]
+            for ts in tss:
+                tag = Tag.objects.filter(tag=ts['tag'])
+                if len(tag) == 0:
+                    tag = Tag.objects.create(tag=ts['tag'])
+                    tag.save()
+                else:
+                    tag = tag[0]
+                pt = PhotoTag.objects.create(tag=tag, score=ts['score'], photo=photo)
+                pt.save()
+
+        return redirect('webimage:gallery_user_album_photo', request.user, album.uuid, photo.uuid)
+
+
+class PhotoTagDeleteView(View):
+    def post(self, request, album, photo, photo_tag):
+        album = AlbumView.get_album_or_404(album)
+        photo = PhotoView.get_photo_or_404(photo)
+        photo_tag = PhotoTagDeleteView.get_photo_tag_or_404(photo_tag)
+        if album.user != request.user:
+            return HttpResponseForbidden()
+        if photo.album != album:
+            return Http404()
+        if photo_tag.photo != photo:
+            return Http404()
+        photo_tag.delete()
+        return redirect('webimage:gallery_user_album_photo', request.user.username, album.uuid, photo.uuid)
+
+    @staticmethod
+    def get_photo_tag_or_404(photo_tag):
+        try:
+            pt = PhotoTag.objects.get(uuid=photo_tag)
+            return pt
+        except PhotoTag.DoesNotExist:
+            raise Http404("The photo_tag you're trying to access does not exist")
 
 
 class TagsView(View):

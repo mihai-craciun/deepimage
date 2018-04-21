@@ -26,7 +26,12 @@ urlpatterns = [
     path('albums/add', auth_required(gallery.AlbumAddView), name='album_add'),
     path('albums/<uuid:album>/delete', auth_required(gallery.AlbumDeleteView), name='album_delete'),
     path('albums/<uuid:album>/edit', auth_required(gallery.AlbumEditView), name='album_edit'),
-    path('albums/<uuid:album>/add', auth_required(gallery.PhotoAddView), name='photo_add')
+    path('albums/<uuid:album>/add', auth_required(gallery.PhotoAddView), name='photo_add'),
+    path('albums/<uuid:album>/<uuid:photo>/delete', auth_required(gallery.PhotoDeleteView), name='photo_delete'),
+    path('albums/<uuid:album>/<uuid:photo>/tag', auth_required(gallery.PhotoTaggingView), name='photo_tagging'),
+    path('albums/<uuid:album>/<uuid:photo>/<uuid:photo_tag>/delete', auth_required(gallery.PhotoTagDeleteView),
+         name='photo_tag_delete'),
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
