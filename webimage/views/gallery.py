@@ -229,11 +229,11 @@ class PhotoView(View):
         profile = UserView.get_profile_or_404(user)
         photo = PhotoView.get_photo_or_404(photo)
         if album.user != profile:
-            return Http404()
+            raise Http404()
         if photo.album != album:
-            return Http404()
-        if photo.private and request.user != profile:
-            return Http404()
+            raise Http404()
+        if (album.private or photo.private) and request.user != profile:
+            raise Http404()
         context = {
             'profile': profile,
             'album': album,
@@ -274,9 +274,9 @@ class PhotoDeleteView(View):
         album = AlbumView.get_album_or_404(album)
         photo = PhotoView.get_photo_or_404(photo)
         if album.user != user:
-            return Http404()
+            raise Http404()
         if photo.album != album:
-            return Http404()
+            raise Http404()
         photo.delete()
         return redirect('webimage:gallery_user_album', user.username, album.uuid)
 
@@ -287,9 +287,9 @@ class PhotoTaggingView(View):
         album = AlbumView.get_album_or_404(album)
         photo = PhotoView.get_photo_or_404(photo)
         if album.user != user:
-            return Http404()
+            raise Http404()
         if photo.album != album:
-            return Http404()
+            raise Http404()
         # Delete old tags
         for pt in PhotoTag.objects.filter(photo=photo):
             pt.delete()
@@ -319,7 +319,7 @@ class PhotoTaggingView(View):
             try:
                 tss = [action_recognition.generate_tags(pil_img)]
             except:
-                tss =[]
+                tss = []
             for ts in tss:
                 tag = Tag.objects.filter(tag=ts['tag'])
                 if len(tag) == 0:
@@ -341,9 +341,9 @@ class PhotoTagDeleteView(View):
         if album.user != request.user:
             return HttpResponseForbidden()
         if photo.album != album:
-            return Http404()
+            raise Http404()
         if photo_tag.photo != photo:
-            return Http404()
+            raise Http404()
         photo_tag.delete()
         return redirect('webimage:gallery_user_album_photo', request.user.username, album.uuid, photo.uuid)
 
@@ -354,6 +354,26 @@ class PhotoTagDeleteView(View):
             return pt
         except PhotoTag.DoesNotExist:
             raise Http404("The photo_tag you're trying to access does not exist")
+
+
+class PhotoTagRotateView(View):
+    def post(self, request, album, photo):
+        album = AlbumView.get_album_or_404(album)
+        photo = PhotoView.get_photo_or_404(photo)
+        if album.user != request.user:
+            return HttpResponseForbidden()
+        if photo.album != album:
+            raise Http404()
+        rotation_type = request.POST.get('mode', None)
+        if rotation_type == 'left':
+            im = Image.open(photo.photo)
+            rotated_image = im.rotate(270, expand=True)
+            rotated_image.save(photo.photo.file.name, overwrite=True)
+        elif rotation_type == 'right':
+            im = Image.open(photo.photo)
+            rotated_image = im.rotate(90, expand=True)
+            rotated_image.save(photo.photo.file.name, overwrite=True)
+        return redirect('webimage:gallery_user_album_photo', request.user.username, album.uuid, photo.uuid)
 
 
 class TagsView(View):

@@ -28,6 +28,20 @@
         <div class="card-body">
             {% if profile == user %}
                 <div class="float-right btn-group" role="group">
+                    <form class="m-1" action="{% url 'webimage:photo_rotate' album.uuid photo.uuid %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="mode" value="left">
+                        <button class="btn btn-success" type="submit">
+                            <i class="fa fa-undo"></i>
+                        </button>
+                    </form>
+                    <form class="m-1" action="{% url 'webimage:photo_rotate' album.uuid photo.uuid %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="mode" value="right">
+                        <button class="btn btn-success" type="submit">
+                            <i class="fa fa-undo fa-flip-horizontal"></i>
+                        </button>
+                    </form>
                     <form class="m-1" action="{% url 'webimage:photo_tagging' album.uuid photo.uuid %}" method="POST">
                         {% csrf_token %}
                         <button class="btn btn-warning" type="submit">
@@ -56,9 +70,9 @@
                                 <a style="text-decoration: none;" class="text-white"
                                    href="{% url 'webimage:gallery_tags_tag' pt.tag.tag %}">{{ pt.tag.tag }}</a>
                                 {% if profile == user %}
-                                <a class="text-light" onclick="$('#{{ pt.uuid }}').submit()">
-                                    <i class="fa fa-times"></i>
-                                </a>
+                                    <a class="text-light" onclick="$('#{{ pt.uuid }}').submit()">
+                                        <i class="fa fa-times"></i>
+                                    </a>
                                     <form id="{{ pt.uuid }}" method="post"
                                           action="{% url 'webimage:photo_tag_delete' album.uuid photo.uuid pt.uuid %}">
                                         {% csrf_token %}
