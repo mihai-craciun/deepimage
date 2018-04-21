@@ -55,13 +55,15 @@
                             <div class="badge badge-secondary">
                                 <a style="text-decoration: none;" class="text-white"
                                    href="{% url 'webimage:gallery_tags_tag' pt.tag.tag %}">{{ pt.tag.tag }}</a>
+                                {% if profile == user %}
                                 <a class="text-light" onclick="$('#{{ pt.uuid }}').submit()">
                                     <i class="fa fa-times"></i>
                                 </a>
-                                <form id="{{ pt.uuid }}" method="post"
-                                      action="{% url 'webimage:photo_tag_delete' album.uuid photo.uuid pt.uuid %}">
-                                    {% csrf_token %}
-                                </form>
+                                    <form id="{{ pt.uuid }}" method="post"
+                                          action="{% url 'webimage:photo_tag_delete' album.uuid photo.uuid pt.uuid %}">
+                                        {% csrf_token %}
+                                    </form>
+                                {% endif %}
                             </div>
                         {% endfor %}
                     {% else %}
