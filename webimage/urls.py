@@ -12,6 +12,7 @@ def auth_required(view):
 app_name = 'webimage'
 urlpatterns = [
     path('', auth_required(views.IndexView), name='index'),
+    path('profile/', auth_required(views.EditProfileView), name='profile'),
     path('login/', views.LoginView.as_view(), name='login'),
     path('register/', views.RegisterView.as_view(), name='register'),
     path('logout/', views.LogoutView.as_view(), name='logout'),

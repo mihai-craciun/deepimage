@@ -30,6 +30,26 @@ class RegisterForm(forms.Form):
         attrs={'class': 'form-control'}), label='Password Confirmation', required=True)
 
 
+class EditProfileForm(forms.Form):
+    first_name = forms.CharField(label='First Name', widget=forms.TextInput(
+        attrs={'class': 'form-control'}))
+    last_name = forms.CharField(label='Last Name', widget=forms.TextInput(
+        attrs={'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}), label='New password',
+                               validators=[
+                                   RegexValidator(
+                                       '[a-zA-Z]+', 'The password must contain one or more letters'),
+                                   RegexValidator(
+                                       '[0-9]+', 'The password must contain one or more digits'),
+                                   RegexValidator(
+                                       '[!@#$%^&_]+',
+                                       'The password must contain at least one special symbol "!@#$%^&_"'),
+                                   RegexValidator('^.{5,20}$', 'The password must be 5-15 characters long')],
+                               required=False)
+    confirm_password = forms.CharField(widget=forms.PasswordInput(
+        attrs={'class': 'form-control'}), label='New password Confirmation', required=False)
+
+
 class LoginForm(forms.Form):
     email = forms.CharField(label='Email', validators=[EmailValidator(
         'Please enter a valid e-mail')], widget=forms.TextInput(attrs={'class': "form-control", "type": "email"}),

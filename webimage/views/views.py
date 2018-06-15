@@ -136,3 +136,60 @@ class LogoutView(View):
     def post(self, request):
         logout(request)
         return redirect('/')
+
+
+class EditProfileView(View):
+    def get(self, request):
+        form=EditProfileForm(initial={
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name
+            })
+        return render(request, 'webimage/profile.html', {
+            'title': 'Edit Profile',
+            'form': form,
+        })
+
+    def post(self, request):
+        # Getting the post data
+        form = EditProfileForm(request.POST)
+        changed = False
+
+        if form.is_valid():
+            data = form.cleaned_data
+
+            # Change names
+            if data['first_name'] != "":
+                if data['first_name'] != request.user.first_name:
+                    changed = True
+                    request.user.first_name = data['first_name']
+                    request.user.save()
+            else:
+                form.add_error('first_name', 'First name cannot be null')
+            
+            if data['last_name'] != "":
+                if data['last_name'] != request.user.last_name:
+                    changed = True
+                    request.user.last_name = data['last_name']
+                    request.user.save()
+            else:
+                form.add_error('last_name', 'Last name cannot be null')
+            
+            # Password
+            if data['password'] != "":
+                if data['password'] != data['confirm_password']:
+                    form.add_error('confirm_password', 'Passwords do not match')
+                else:
+                    if request.user.check_password(data['password']):
+                        form.add_error('password', 'The new password cannot be the old password')
+                    else:
+                        changed = True
+                        request.user.set_password(data['password'])
+                        request.user.save()
+        
+        return render(request, 'webimage/profile.html', {
+            'title': 'Edit Profile',
+            'form': form,
+            'success': form.is_valid() and changed
+        })
+        
+        
