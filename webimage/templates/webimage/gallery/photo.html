@@ -44,7 +44,7 @@
                     </form>
                     <form class="m-1" action="{% url 'webimage:photo_tagging' album.uuid photo.uuid %}" method="POST">
                         {% csrf_token %}
-                        <button class="btn btn-warning" type="submit">
+                        <button class="btn btn-warning" type="submit" onClick="loadingSpinner(this)">
                             <i class="fa fa-tags"></i> Update tags
                         </button>
                     </form>
