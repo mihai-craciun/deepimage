@@ -367,11 +367,11 @@ class PhotoTagRotateView(View):
         rotation_type = request.POST.get('mode', None)
         if rotation_type == 'left':
             im = Image.open(photo.photo)
-            rotated_image = im.rotate(270, expand=True)
+            rotated_image = im.rotate(90, expand=True)
             rotated_image.save(photo.photo.file.name, overwrite=True)
         elif rotation_type == 'right':
             im = Image.open(photo.photo)
-            rotated_image = im.rotate(90, expand=True)
+            rotated_image = im.rotate(270, expand=True)
             rotated_image.save(photo.photo.file.name, overwrite=True)
         return redirect('webimage:gallery_user_album_photo', request.user.username, album.uuid, photo.uuid)
 
